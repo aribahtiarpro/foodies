@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\kategori;
 use DataTables;
+use Illuminate\Support\Str;
 
 class KategoriController extends Controller
 {

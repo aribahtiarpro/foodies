@@ -38,3 +38,9 @@ Route::group(['middleware' => array('web', 'auth')], function()
 
     });
 });
+
+
+// Public URL
+Route::get('/kat/{slug}', 'PublicController@kategori');
+Route::get('/@{username}', 'PublicController@username');
+Route::get('/{slug}', 'PublicController@product');
