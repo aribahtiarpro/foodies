@@ -3,7 +3,7 @@
     <!-- Sidebar - Brand -->
     <a class="d-flex align-items-center justify-content-center text-primary" href="/">
       <div class="mx-3">
-        <img src="/img/logo.png" width="150px">
+        <img src="/img/logo.png" width="100px">
       </div>
     </a>
 
