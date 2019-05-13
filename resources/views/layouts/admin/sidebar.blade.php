@@ -69,8 +69,8 @@
       <div id="collapseUtilities1" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
           <h6 class="collapse-header">Kategori Makanan:</h6>
-          <a class="collapse-item" href="#">List Kategori</a>
-          <a class="collapse-item" href="#">Tambah Kategri</a>
+          <a class="collapse-item" href="/kategori">List Kategori</a>
+          <a class="collapse-item" href="/kategori/create">Tambah Kategri</a>
         </div>
       </div>
     </li>

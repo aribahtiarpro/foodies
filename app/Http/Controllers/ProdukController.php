@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\produk;
+use Auth;
+use DataTables;
+use App\kategori;
 
 class ProdukController extends Controller
 {
@@ -29,9 +33,59 @@ class ProdukController extends Controller
      * @param  Request $request
      * @return Response
      */
-    public function store(Request $request)
+    public function semuaProduk(){
+        $model = produk::query();
+        if(Auth::user()->id == 1){
+            $produk = $model;
+        }else{
+            $produk = $model->where("warung_id", Auth::user()->id);
+        }
+        return Datatables::of($produk)
+            ->addColumn('kategori', function ($pro) {
+                $dkat = kategori::find($pro->kat_id);
+                if($dkat){
+                    return  $dkat->nama;
+                }else{
+                    return "";
+                }
+            })
+            ->addColumn('action', function ($kat) {
+                $edit = "<a href='#' onclick='editkategori(".$kat.")' class='btn btn-sm btn-primary mr-2'><i class='fa fa-edit'></i> Edit</a>";
+                $delete = '<a href="#" onclick="deletekategori('.$kat->id.')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</a>';
+                return $edit . $delete;
+            })
+            ->make(true);
+    }
+    public function store(Request $req)
     {
-        return $request;
+        // return $req;
+        // 'nama','detail', 'img', 'harga','stok','kat_id','warung_id',
+        $this->validate($req,[
+            "nama" => "required",
+            "detail" => "required",
+            "harga" => "required",
+            "stok" => "required",
+            "kat_id" => "required",
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $imagename = time().'.'.request()->image->getClientOriginalExtension();
+        
+        $req->file('image')->move(public_path('img'), $imagename);
+        
+        $slug = Str::slug($req['nama'], '-');
+        $new = new produk;
+        $new->nama = $req['nama'];
+        $new->slug = $slug;
+        $new->img = $imagename;
+        $new->harga = $req['harga'];
+        $new->stok = $req['stok'];
+        $new->kat_id = $req['kat_id'];
+        $new->detail = $req['detail'];
+        $new->warung_id = Auth::user()->id;
+        $new->save();
+
+        return redirect("product");
     }
 
     /**

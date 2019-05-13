@@ -25,6 +25,9 @@
 *{
     box-sizing: border-box
 }
+.pointer{
+  cursor: pointer;
+}
 </style>
 @stack('css-after')
 </head>

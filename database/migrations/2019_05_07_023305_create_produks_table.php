@@ -17,6 +17,7 @@ class CreateProduksTable extends Migration
             $table->bigIncrements('id');
             $table->string('nama',100);
             $table->string('detail');
+            $table->string('slug')->nullable();
             $table->string('img')->nullable();
             $table->integer('harga');
             $table->integer('stok');
