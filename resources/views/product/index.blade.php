@@ -39,16 +39,22 @@
       });
     });
 
-    function edittalent(data){
-      $("#edittalent").modal("show");
+    function editproduk(data){
+      $("#editproduk").modal("show");
       $("#edit-id").val(data.id);
       $("#edit-nama").val(data.nama);
-      $("#edit-deskripsi").val(data.deskripsi);
+      $("#edit-harga").val(data.harga);
+      $("#edit-stok").val(data.stok);
+      $("#edit-detail").val(data.detail);
+      $("#edit-sub").val(data.kat_id);
+      $("#imgpreview").html(`
+        <img src="/img/${data.img}" width="100px">
+      `);
       console.log(data);
     }
-    function deletetalent(id){
+    function deleteproduk(id){
       $("#delete-id").val(id);
-      $("#deletetalent").modal("show");
+      $("#deleteproduk").modal("show");
     }
 </script>
 @endpush

@@ -1,0 +1,23 @@
+.product-text {
+    border-radius: 5%;
+    padding: 8px 5px;
+    background: #ffff;
+    left: 0;
+    right: 0;
+}
+
+.product:hover {
+    opacity: .8;
+}
+
+.product:hover .product-text {
+    position: absolute;
+}
+
+.product-text .product-act {
+    height: 100px;
+}
+
+.product h1 {
+    font-size: 1.1rem
+}

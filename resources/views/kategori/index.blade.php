@@ -57,7 +57,7 @@
 
     $("#customFile").change(function(){
         $("#imgpreview").html(`
-        <img src="${window.URL.createObjectURL(this.files[0])}" width="100px">
+          <img src="${window.URL.createObjectURL(this.files[0])}" width="100px">
         `)
     })
         // In your Javascript (external .js resource or <script> tag)

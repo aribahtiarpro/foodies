@@ -11,17 +11,7 @@ Foodies
 @push('css-after')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
-<style>
-
-.product .product-text{
-    padding: 8px 5px;
-}
-
-.product h1{
-    font-size: 1.1rem
-}
-
-</style>
+<link rel="stylesheet" href="css/aristyle.css">
 @endpush
 @push('js-after')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
@@ -30,7 +20,6 @@ var owl = $('.produk');
 owl.owlCarousel({
     loop:true,
     margin:10,
-    nav:true,
     responsive:{
         0:{
             items:1
@@ -80,7 +69,8 @@ function view(slug){
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 col-lg-5">
+            <div class="col-md-12 col-lg-5 pointer" data-target="#paydies" data-toggle="modal">
+                <hr>
                 <div class="row my-2">
                     <div class="col-md-12">Paydies</div>
                 </div>
@@ -94,18 +84,19 @@ function view(slug){
                                     <div class="h5 mb-0 font-weight-bold text-gray-800">Rp 400,000</div>
                                 </div>
                                 <div class="col-auto">
-                                    <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                    <i class="fas fa-credit-card fa-2x text-primary-300"></i>
                                 </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <hr>
                 <div class="row my-2">
                     <div class="col-md-12">About Foodies</div>
                 </div>
                 <div class="embed-responsive embed-responsive-16by9">
-                    <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
+                    <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/fxZAoPAG98Q?rel=0" allowfullscreen></iframe>
                 </div>
             </div>
     </div>
@@ -114,12 +105,14 @@ function view(slug){
     </div>
     <div class="row">
         @foreach ($kategoris as $item)
-            <div class="col-md-6 col-lg-3 p-2 pointer" onclick="view('kat/{{ $item->slug }}')">
-                <img src="img/{{ $item->img }}" width="50px">
-                {{ $item->nama}}
+            <div class="p-2 pointer" onclick="view('kat/{{ $item->slug }}')">
+                <img class="shadow" width="50px" height="50px" src="img/{{ $item->img }}">
+                <span>{{ $item->nama}}</span>
             </div>
         @endforeach
     </div>
+    <!-- Divider -->
+    <hr class="sidebar-divider">
     <div class="row my-4">
         <div class="col-md-12">New Product</div>
     </div>
@@ -133,11 +126,21 @@ function view(slug){
                     }
                 @endphp
                 @for($i = 1; $i < $nmax; $i++)
-                    <div class="item product pointer" onclick="view('{{ $produks[$i]->slug }}')">
-                    <img src="img/{{ $produks[$i]->img }}">
+                    <div class="product pointer">
+                        <img  onclick="view('{{ $produks[$i]->slug }}')" src="img/{{ $produks[$i]->img }}">
                         <div class="product-text">
-                            <h1>{{ $produks[$i]->nama}}</h1>
-                            <span class="text-primary">Rp. {{ $produks[$i]->harga}}</span>
+                            <h1><b>{{ $produks[$i]->nama}}</b></h1>
+                            <div class="product-act">
+                                <span class="text-primary">Rp. {{ $produks[$i]->harga}}
+                                    <a onclick="addToCart({{ json_encode($produks[$i])}})" class="text-white btn-sm btn btn-primary btn-icon-split float-right">
+                                        <span class="icon text-white-50">
+                                            <i class="fa fa-shopping-cart"></i>
+                                        </span>
+                                        <span class="text">tambah</span>
+                                    </a>
+                                </span>
+                                <p>{!! substr($item->detail, 0, 50) !!}</p>
+                            </div>
                         </div>
                     </div>
                 @endfor

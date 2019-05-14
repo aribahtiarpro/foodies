@@ -1,7 +1,8 @@
 @php
-    $kategoris = DB::table("kategoris")->orderBy("nama","ASC")->get();
+  if($produk){
     $warung = DB::table("users")->where("id",$produk->warung_id)->get()->first();
     $produks = DB::table("produks")->where("id","!=",$produk->id)->where("warung_id",$produk->warung_id)->orderBy("created_at","DESC")->get();
+  }
 @endphp
 @extends('layouts.user')
 
@@ -59,12 +60,12 @@ function view(slug){
 @endpush
 @section('content')
 
-
+@if($produk)
 <section class="container">
     <div class="row">
         <div class="col-md-12">
             <div class="row">
-                <div class="col-md-12 col-lg-6 pt-3">
+                <div class="col-md-12 col-lg-6">
                     <img src="/img/{{$produk->img}}" width="100%">
                 </div>
                 <div class="col-md-12 col-lg-6 product-text pt-2">
@@ -79,7 +80,7 @@ function view(slug){
                                             
                                         </div>
                                         <div class="col-auto">
-                                            <a onclick="addToCart({{ json_encode($produk)}})" href="#" class="btn btn-primary btn-icon-split">
+                                            <a  onclick="addToCart({{ json_encode($produk)}})" href="#" class="btn btn-primary btn-icon-split">
                                                 <span class="icon text-white-50">
                                                     <i class="fa fa-shopping-cart"></i>
                                                 </span>
@@ -94,8 +95,8 @@ function view(slug){
                         </div>
                         <hr>
                         <span class="mr-2 pt-4 h3">
-                                <img width="50px" src="{{ $warung->avatar ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCAaNR8ezyQXK7BjFYLNxLt4jum9Fy-zctQ-UINx5OZlKvJi7g' }}">
-                            {{'@'.$warung->name}}
+                            <img width="50px" src="{{ $warung->avatar ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCAaNR8ezyQXK7BjFYLNxLt4jum9Fy-zctQ-UINx5OZlKvJi7g' }}">
+                            <b class="text-primary">{{'@'.$warung->name}}</b>
                             <div class="float-right text-warning h5 pt-3">
                                 <i class="fa fa-star"></i>
                                 <i class="fa fa-star"></i>
@@ -137,4 +138,5 @@ function view(slug){
     <br>
     <br>
 </section>
+@endif
 @endsection

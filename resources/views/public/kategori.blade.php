@@ -1,6 +1,7 @@
 @php
     $kategoris = DB::table("kategoris")->orderBy("nama","ASC")->get();
     $produks = DB::table("produks")->where("kat_id",$kategori->id)->orderBy("created_at","DESC")->get();
+    $produkpaginate = App\produk::where("kat_id",$kategori->id)->orderBy("created_at","ASC")->paginate(4);
 @endphp
 @extends('layouts.user')
 
@@ -28,12 +29,11 @@ Foodies
 <script>
 var owl = $('.produk');
 owl.owlCarousel({
-    loop:true,
+    // loop:true,
     margin:10,
-    nav:true,
     responsive:{
         0:{
-            items:2
+            items:1
         },
         600:{
             items:3
@@ -45,12 +45,6 @@ owl.owlCarousel({
 })
 
 
-$('.promosi').owlCarousel({
-    center: true,
-    items:1,
-    loop:true,
-    margin:10
-});
 function view(slug){
     location.href = "/"+slug
 }
@@ -63,56 +57,89 @@ function view(slug){
     </div>
     <div class="row">
         @foreach ($kategoris as $item)
-            <div class="col-md-6 col-lg-3 p-2 pointer" onclick="view('kat/{{ $item->slug }}')">
-                <img src="/img/{{ $item->img }}" width="50px">
-                {{ $item->nama}}
-            </div>
+        <div class=" m-2 pointer" style="border-radius:5%" onclick="view('kat/{{ $item->slug }}')">
+            <img class="shadow" width="50px" height="50px" src="/img/{{ $item->img }}">
+            <span>{{ $item->nama}}</span>
+        </div>
         @endforeach
     </div>
+    
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
     <div class="row my-4">
         <div class="col-md-12">New Product</div>
     </div>
+    
     <div class="row">
             <div class="owl-carousel owl-theme produk">
                 @php
-                    if($produks->count() > 10){
-                        $nmax = 10;
+                    if($produks->count() > 6){
+                        $nmax = 6;
                     }else{
                         $nmax = $produks->count();
                     }
                 @endphp
-                @for($i = 1; $i < $nmax; $i++)
-                    <div class="item product pointer" onclick="view('{{ $produks[$i]->slug }}')">
-                    <img src="/img/{{ $produks[$i]->img }}">
+                @for($i = 0; $i < $nmax; $i++)
+                    <div class="product pointer">
+                        <img  onclick="view('{{ $produks[$i]->slug }}')" src="/img/{{ $produks[$i]->img }}">
                         <div class="product-text">
                             <h1>{{ $produks[$i]->nama}}</h1>
-                            <span class="text-primary">Rp. {{ $produks[$i]->harga}}</span>
+                            <div class="product-act">
+                                <span class="text-primary">Rp. {{ $produks[$i]->harga}}
+                                    <a  onclick="addToCart({{ json_encode($item)}})" class="text-white btn btn-sm btn-primary btn-icon-split float-right">
+                                        <span class="icon text-white-50">
+                                            <i class="fa fa-shopping-cart"></i>
+                                        </span>
+                                        <span class="text">tambah</span>
+                                    </a>
+                                </span>
+                                <p>{!! substr($item->detail, 0, 50) !!}</p>
+                            </div>
                         </div>
                     </div>
                 @endfor
         </div>
     </div>
-
+    
+    <!-- Divider -->
+    <hr class="sidebar-divider">
     <div class="row my-4">
         <div class="col-md-12">List Product</div>
     </div>
+    
     <div class="row">
-        <div class="col-md-12">
-            @foreach ($produks as $item)
-            <div class="row pointer" onclick="view('{{ $item->slug }}')">
-                <div class="col-md-4">
-                    <img src="/img/{{ $item->img }}" class="img-fluid">
+        @foreach ($produkpaginate as $item)
+        <div class="col-md-12 col-lg-6 pointer pb-2" onclick="view('{{ $item->slug }}')">
+            <div class="row">
+                <div class="col-md-12 col-lg-6">
+                    <img width="100%" src="/img/{{ $item->img }}">
                 </div>
-                <div class="col-md-8 product-text pt-2">
+                <div class="col-md-12 col-lg-6 pt-4">
                     <h4>{{ $item->nama}}</h4>
-                    <span class="text-primary">Rp. {{ $item->harga}}</span>
+                    <span class="text-primary">Rp. {{ $item->harga}}
+                    <a  onclick="addToCart({{ json_encode($item)}})" href="#" class="btn btn-primary btn-sm float-right btn-icon-split">
+                            <span class="icon text-white-50">
+                                <i class="fa fa-shopping-cart"></i>
+                            </span>
+                            <span class="text">tambah</span>
+                        </a>
+                    </span>
+                    <p>
+                        {!! substr($item->detail, 0, 70) !!}
+                    </p>
+                    
                 </div>
             </div>
-            @endforeach
         </div>
+        @endforeach
     </div>
-
     <br>
+    {{ $produkpaginate->links() }}
+    <br>
+    
+    <!-- Divider -->
+    <hr class="sidebar-divider">
     <br>
     <br>
 </section>

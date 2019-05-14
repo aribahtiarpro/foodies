@@ -7,6 +7,7 @@ use App\produk;
 use Auth;
 use DataTables;
 use App\kategori;
+use Illuminate\Support\Str;
 
 class ProdukController extends Controller
 {
@@ -35,7 +36,7 @@ class ProdukController extends Controller
      */
     public function semuaProduk(){
         $model = produk::query();
-        if(Auth::user()->id == 1){
+        if(Auth::user()->role_id == 1){
             $produk = $model;
         }else{
             $produk = $model->where("warung_id", Auth::user()->id);
@@ -50,8 +51,8 @@ class ProdukController extends Controller
                 }
             })
             ->addColumn('action', function ($kat) {
-                $edit = "<a href='#' onclick='editkategori(".$kat.")' class='btn btn-sm btn-primary mr-2'><i class='fa fa-edit'></i> Edit</a>";
-                $delete = '<a href="#" onclick="deletekategori('.$kat->id.')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</a>';
+                $edit = "<a href='#' onclick='editproduk(".$kat.")' class='btn btn-sm btn-primary mr-2'><i class='fa fa-edit'></i> Edit</a>";
+                $delete = '<a href="#" onclick="deleteproduk('.$kat->id.')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</a>';
                 return $edit . $delete;
             })
             ->make(true);
@@ -88,6 +89,46 @@ class ProdukController extends Controller
         return redirect("product");
     }
 
+    public function editProduk(Request $req){
+        // return $req;
+        // 'nama','detail', 'img', 'harga','stok','kat_id','warung_id',
+        $this->validate($req,[
+            "id" => "required",
+            "nama" => "required",
+            "detail" => "required",
+            "harga" => "required",
+            "stok" => "required",
+            "kat_id" => "required",
+        ]);
+
+        $new = produk::find($req['id']);
+
+        if($req->file('image')){
+            $this->validate($req,[
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+            $imagename = time().'.'.request()->image->getClientOriginalExtension();
+
+            $req->file('image')->move(public_path('img'), $imagename);
+
+            if (file_exists(public_path('img').'/'.$new->img)) {
+                unlink(public_path('img').'/'.$new->img);
+            }
+            $new->img = $imagename;
+        }
+        
+        $slug = Str::slug($req['nama'], '-');
+        $new->nama = $req['nama'];
+        $new->slug = $slug;
+        $new->harga = $req['harga'];
+        $new->stok = $req['stok'];
+        $new->kat_id = $req['kat_id'];
+        $new->detail = $req['detail'];
+        $new->warung_id = Auth::user()->id;
+        $new->save();
+
+        return redirect("product");
+    }
     /**
      * Show the specified resource.
      * @return Response
